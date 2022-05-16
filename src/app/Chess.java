@@ -93,9 +93,6 @@ public class Chess {
                 chessCodeToCartesian.put(boardCols[col] + (dim-row), new int[]{row, col});
             }
         }
-        for (Entry<String, int[]> entry : chessCodeToCartesian.entrySet()) {
-            System.out.println(entry.getKey() + " " + "[" + entry.getValue()[0] + ", " + entry.getValue()[1] + "]");
-        }
     }
 
     private static void initColors(String whitePieceColor, String blackPieceColor) {
@@ -174,10 +171,7 @@ public class Chess {
 
         if (chessCode.charAt(1) == 'x') {
             // Capturing another piece
-            System.out.println("WOW: " + chessCode);
-            // chessCode = chessCode.replace("x", "");
             playerMove = chessCode.substring(2);
-            System.out.println("WOWIE: " + chessCode);
             capturingPiece = true;
         }
 
@@ -209,30 +203,31 @@ public class Chess {
         if (capturingPiece) {
             capturedPieces.get(pieceColor).add(board[r][c]);
         }
-
-        System.out.println(capturedPieces);
         
-        // TODO: CHECK WHICH of "white/black" pieces can make the valid
-        // move to the chessCode square
+        // TODO: handle when a move wins a piece or checkmate
+        // TODO: Before making the move, check if the piece has valid movement to the destination
 
-        // BIGGER TODO: handle when a move wins a piece or even better checkmate
-
-        // TODO: Before making the move, check if the piece can legally
         // jump to the `chessCode`
         board[origin[0]][origin[1]] = "o";
         board[r][c] = colors.get(lastPieceMoved) + piece + ANSI_RESET;
         
         // Add move to match log
         matchLog.add(new String[]{chessCode, pieceColor});
-        
+      
         // show move list
         showMoveList();
 
         // show last move
-        System.out.println("\nLast Move: " + colors.get(lastPieceMoved) + chessCode + ANSI_RESET);
+        System.out.println("\nLast Move: " + colors.get(lastPieceMoved) + chessCode + ANSI_RESET + "\n");
+
+        // Show Blacks captured pieces
+        System.out.println(colorOfBlackPieces + ": " + capturedPieces.get("black") + "\n");
 
         // Redraw board after every move and display relevant match info
         showBoard();
+
+        // Show Whites captured pieces
+        System.out.println("\n" + colorOfWhitePieces + ": " + capturedPieces.get("white") + "\n");
 
         numberOfMoves++;
 
@@ -240,6 +235,10 @@ public class Chess {
     }
 
     public static void showMoveList() {
+        System.out.println("Java Chess\n" + "-------------------------------");
+        // Who's who?
+        System.out.println("White pieces: " + colorOfWhitePieces);
+        System.out.println("Black pieces: " + colorOfBlackPieces + "\n");
         System.out.println("Moves:");
         for (int i=0; i < matchLog.size(); i++) {
             String color = matchLog.get(i)[1];
@@ -271,6 +270,6 @@ public class Chess {
             }
         }
         System.out.println(hyphens);
-        System.out.println("    a   b   c   d   e   f   g   h\n");
+        System.out.println("    a   b   c   d   e   f   g   h");
     }
 }
