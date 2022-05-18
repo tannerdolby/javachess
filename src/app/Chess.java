@@ -8,7 +8,6 @@ import java.util.List;
 
 public class Chess {
     public static String[][] board;
-    // public static 
     public static Map<String, Integer> pieceInfo;
     public static int[] pieceValues;
     public static String[] pieces;
@@ -52,7 +51,7 @@ public class Chess {
         init(isPlayingWhitePieces, whitePieceColor, blackPieceColor);
     }
 
-    public void init(Boolean isPlayingWhitePieces, String whitePieceColor, String blackPieceColor) {
+    private static void init(Boolean isPlayingWhitePieces, String whitePieceColor, String blackPieceColor) {
         board = new String[dim][dim];
         pieceValues = new int[]{10, 9, 5, 3, 3, 1};
         pieceCodes = new String[]{"K", "Q", "R", "N", "B", "P"};
@@ -114,7 +113,7 @@ public class Chess {
         return null;
     }
 
-    public static void arrangePieces(String pieceColor) {
+    private static void arrangePieces(String pieceColor) {
         String positions[] = backRanks.get(pieceColor);
         for (int i=0; i < positions.length; i++) {
             String piece = pieceTable.get(positions[i]).get("piece");
@@ -126,7 +125,7 @@ public class Chess {
         }
     }
 
-    public static void placePieces(String piece, int i) {
+    private static void placePieces(String piece, int i) {
         board[0][i] = colorText(colorOfBlackPieces, getKeyByValue(pieceTable, piece));
         board[7][i] = colorText(colorOfWhitePieces, getKeyByValue(pieceTable, piece));
         board[1][i] = colorText(colorOfBlackPieces, "P");
@@ -151,7 +150,7 @@ public class Chess {
         }
     }
 
-    public static String colorText(String pieceColor, String text) {
+    private static String colorText(String pieceColor, String text) {
         if (!colors.containsValue(pieceColor.toLowerCase())) return null;
         return colors.get(pieceColor) + text + ANSI_RESET;
     }
@@ -207,6 +206,11 @@ public class Chess {
         // TODO: handle when a move wins a piece or checkmate
         // TODO: Before making the move, check if the piece has valid movement to the destination
 
+        if (piece == "P") {
+            // 2-directional (forward or left/right forward diagonal for capture)
+            System.out.println(pos + ", " + r + " " + c);
+        }
+
         // jump to the `chessCode`
         board[origin[0]][origin[1]] = "o";
         board[r][c] = colors.get(lastPieceMoved) + piece + ANSI_RESET;
@@ -234,9 +238,8 @@ public class Chess {
         return;
     }
 
-    public static void showMoveList() {
+    public void showMoveList() {
         System.out.println("Java Chess\n" + "-------------------------------");
-        // Who's who?
         System.out.println("White pieces: " + colorOfWhitePieces);
         System.out.println("Black pieces: " + colorOfBlackPieces + "\n");
         System.out.println("Moves:");
